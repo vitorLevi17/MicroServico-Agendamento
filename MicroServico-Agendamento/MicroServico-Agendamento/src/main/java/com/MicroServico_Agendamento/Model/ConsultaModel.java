@@ -1,8 +1,7 @@
 package com.MicroServico_Agendamento.Model;
 
 import jakarta.persistence.*;
-
-import java.util.Date;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -15,6 +14,8 @@ public class ConsultaModel {
     private Long idMedico;
     private Long idPaciente;
     private String descricao;
-    private Date diaHoraConsulta;
-    //private Enum
+    private LocalDateTime diaHoraConsulta;
+    @Enumerated(EnumType.STRING)
+    private StatusConsulta status;
+    private String motivoConsulta;
 }
