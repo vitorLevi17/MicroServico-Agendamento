@@ -1,6 +1,7 @@
 package com.MicroServico_Agendamento.Controller;
 
 import com.MicroServico_Agendamento.DTO.ConsultaDTO;
+import com.MicroServico_Agendamento.DTO.ConsultaUpdateDTO;
 import com.MicroServico_Agendamento.Service.ConsultaService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -25,5 +26,10 @@ public class ConsultaController {
     public ResponseEntity postConsulta(@RequestBody @Valid ConsultaDTO consultaDTO){
         service.criarAgendamento(consultaDTO);
         return ResponseEntity.ok("Criado com sucesso"); //Retornar RESPONSE
+    }
+    @PutMapping("consulta")
+    public ResponseEntity putConsulta( @RequestBody @Valid ConsultaUpdateDTO consultaUpdateDTO){
+        service.editarAgendamento(consultaUpdateDTO);
+        return ResponseEntity.ok("Editado com sucesso");
     }
 }

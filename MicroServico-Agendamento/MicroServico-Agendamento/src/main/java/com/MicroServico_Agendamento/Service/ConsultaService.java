@@ -2,7 +2,9 @@ package com.MicroServico_Agendamento.Service;
 
 import com.MicroServico_Agendamento.DTO.ConsultaDTO;
 import com.MicroServico_Agendamento.DTO.ConsultaResponse;
+import com.MicroServico_Agendamento.DTO.ConsultaUpdateDTO;
 import com.MicroServico_Agendamento.Model.ConsultaModel;
+import com.MicroServico_Agendamento.Model.StatusConsulta;
 import com.MicroServico_Agendamento.Repository.ConsultaRepository;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,9 @@ public class ConsultaService {
 
     public ConsultaModel criarAgendamento(ConsultaDTO request){
 
+        //repository.findbyIdPaciente
+        //repository.findbyIdMedico
+
         if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
             throw new IllegalArgumentException("A data da consulta deve ser no futuro.");
         }
@@ -38,6 +43,29 @@ public class ConsultaService {
             throw new RuntimeException("O paciente não pode se atender");
         }
         ConsultaModel consultaModel = new ConsultaModel(request);
+        return repository.save(consultaModel);
+    }
+    public ConsultaModel editarAgendamento(ConsultaUpdateDTO request){
+        ConsultaModel consultaModel = repository.findById(request.id()).
+                orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+
+        //repository.findbyIdPaciente
+        //repository.findbyIdMedico
+        if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
+            throw new IllegalArgumentException("A data da consulta deve ser no futuro.");
+        }
+        if (request.idMedico().equals(request.idPaciente())){
+            throw new RuntimeException("O paciente não pode se atender");
+        }
+//        if (request.status().equals(StatusConsulta.values())){
+//            throw new RuntimeException("Selecione um status válido");
+//        }
+        consultaModel.setIdMedico(request.idMedico());
+        consultaModel.setIdPaciente(request.idPaciente());
+        consultaModel.setDescricao(request.descricao());
+        consultaModel.setDiaHoraConsulta(request.diaHoraConsulta());
+        consultaModel.setStatus(request.status());
+        consultaModel.setMotivoConsulta(request.motivoConsulta());
         return repository.save(consultaModel);
     }
 }

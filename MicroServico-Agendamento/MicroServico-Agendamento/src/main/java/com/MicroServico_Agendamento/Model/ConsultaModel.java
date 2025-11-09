@@ -56,4 +56,28 @@ public class ConsultaModel {
     public String getMotivoConsulta() {
         return motivoConsulta;
     }
+
+    public void setIdMedico(Long idMedico) {
+        this.idMedico = idMedico;
+    }
+
+    public void setIdPaciente(Long idPaciente) {
+        this.idPaciente = idPaciente;
+    }
+
+    public void setDescricao(String descricao) {
+        this.descricao = descricao;
+    }
+
+    public void setDiaHoraConsulta(LocalDateTime diaHoraConsulta) {
+        this.diaHoraConsulta = diaHoraConsulta;
+    }
+
+    public void setStatus(StatusConsulta status) {
+        this.status = status;
+    }
+
+    public void setMotivoConsulta(String motivoConsulta) {
+        this.motivoConsulta = motivoConsulta;
+    }
 }

@@ -15,7 +15,7 @@ public record ConsultaDTO(
          String descricao,
          @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
          LocalDateTime diaHoraConsulta,
-         @NotBlank
+         @NotBlank(message = "Insira o motivo da consulta")
          String motivoConsulta
 ) {
 }
