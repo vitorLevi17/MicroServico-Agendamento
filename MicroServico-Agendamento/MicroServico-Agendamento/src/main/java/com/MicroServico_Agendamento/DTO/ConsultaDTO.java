@@ -1,14 +1,21 @@
 package com.MicroServico_Agendamento.DTO;
 
-import com.MicroServico_Agendamento.Model.StatusConsulta;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+
 import java.time.LocalDateTime;
 
 public record ConsultaDTO(
+         @Positive(message = "Insira um valor válido")
          Long idMedico,
+         @Positive(message = "Insira um valor válido")
          Long idPaciente,
          String descricao,
+         @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
          LocalDateTime diaHoraConsulta,
-         StatusConsulta status,
+         @NotBlank
          String motivoConsulta
 ) {
 }

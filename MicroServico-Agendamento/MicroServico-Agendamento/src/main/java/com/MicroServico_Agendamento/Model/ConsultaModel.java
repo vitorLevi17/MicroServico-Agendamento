@@ -1,5 +1,7 @@
 package com.MicroServico_Agendamento.Model;
 
+import com.MicroServico_Agendamento.DTO.ConsultaDTO;
+import com.MicroServico_Agendamento.DTO.ConsultaResponse;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -18,6 +20,18 @@ public class ConsultaModel {
     @Enumerated(EnumType.STRING)
     private StatusConsulta status;
     private String motivoConsulta;
+
+    public ConsultaModel() {
+    }
+
+    public ConsultaModel(ConsultaDTO consultaDTO) {
+        this.idMedico = consultaDTO.idMedico();
+        this.idPaciente = consultaDTO.idPaciente();
+        this.descricao = consultaDTO.descricao();
+        this.diaHoraConsulta = consultaDTO.diaHoraConsulta();
+        this.status = StatusConsulta.ABERTO;
+        this.motivoConsulta = consultaDTO.motivoConsulta();
+    }
 
     public Long getIdMedico() {
         return idMedico;
