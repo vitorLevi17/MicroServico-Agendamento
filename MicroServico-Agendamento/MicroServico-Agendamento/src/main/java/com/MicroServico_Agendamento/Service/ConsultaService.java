@@ -4,8 +4,10 @@ import com.MicroServico_Agendamento.DTO.ConsultaDTO;
 import com.MicroServico_Agendamento.DTO.ConsultaResponse;
 import com.MicroServico_Agendamento.DTO.ConsultaUpdateDTO;
 import com.MicroServico_Agendamento.Model.ConsultaModel;
-import com.MicroServico_Agendamento.Model.StatusConsulta;
 import com.MicroServico_Agendamento.Repository.ConsultaRepository;
+import com.MicroServico_Agendamento.Service.Exceptions.BadRequest;
+import com.MicroServico_Agendamento.Service.Exceptions.Conflict;
+import com.MicroServico_Agendamento.Service.Exceptions.NotFound;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,7 +21,7 @@ public class ConsultaService {
     }
     public ConsultaResponse buscarAgendamento(Long id){
         //ADICIONAR EXCEPTION PERSONALIZADA
-        ConsultaModel agendamento = repository.findById(id).orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+        ConsultaModel agendamento = repository.findById(id).orElseThrow(() -> new NotFound("Consulta não encontrada"));
         ConsultaResponse consulta = new ConsultaResponse(
                 agendamento.getIdMedico(),
                 agendamento.getIdPaciente(),
@@ -37,25 +39,25 @@ public class ConsultaService {
         //repository.findbyIdMedico
 
         if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
-            throw new IllegalArgumentException("A data da consulta deve ser no futuro.");
+            throw new BadRequest("A data da consulta deve ser no futuro.");
         }
         if (request.idMedico().equals(request.idPaciente())){
-            throw new RuntimeException("O paciente não pode se atender");
+            throw new Conflict("O paciente não pode se atender");
         }
         ConsultaModel consultaModel = new ConsultaModel(request);
         return repository.save(consultaModel);
     }
     public ConsultaModel editarAgendamento(ConsultaUpdateDTO request){
         ConsultaModel consultaModel = repository.findById(request.id()).
-                orElseThrow(() -> new RuntimeException("Consulta não encontrada"));
+                orElseThrow(() -> new NotFound("Consulta não encontrada"));
 
         //repository.findbyIdPaciente
         //repository.findbyIdMedico
         if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
-            throw new IllegalArgumentException("A data da consulta deve ser no futuro.");
+            throw new BadRequest("A data da consulta deve ser no futuro.");
         }
         if (request.idMedico().equals(request.idPaciente())){
-            throw new RuntimeException("O paciente não pode se atender");
+            throw new Conflict("O paciente não pode se atender");
         }
 //        if (request.status().equals(StatusConsulta.values())){
 //            throw new RuntimeException("Selecione um status válido");

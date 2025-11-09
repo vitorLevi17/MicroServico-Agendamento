@@ -1,0 +1,32 @@
+package com.MicroServico_Agendamento.Controller.Handlers;
+
+import com.MicroServico_Agendamento.DTO.ExceptionDTO;
+import com.MicroServico_Agendamento.Service.Exceptions.BadRequest;
+import com.MicroServico_Agendamento.Service.Exceptions.Conflict;
+import com.MicroServico_Agendamento.Service.Exceptions.NotFound;
+import jakarta.annotation.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class ExceptionController {
+
+    @ExceptionHandler(NotFound.class)
+    public ResponseEntity<ExceptionDTO> handlerNotFound(NotFound e){
+        var status = HttpStatus.NOT_FOUND;
+        return ResponseEntity.status(status.value()).body(new ExceptionDTO(e.getMessage(),status.value()));
+    }
+    @ExceptionHandler(Conflict.class)
+    public ResponseEntity<ExceptionDTO> handlerConflict(Conflict e){
+        var status = HttpStatus.CONFLICT;
+        return ResponseEntity.status(status.value()).body(new ExceptionDTO(e.getMessage(),status.value()));
+    }
+    @ExceptionHandler(BadRequest.class)
+    public ResponseEntity<ExceptionDTO> handlerConflict(BadRequest e){
+        var status = HttpStatus.BAD_REQUEST;
+        return ResponseEntity.status(status.value()).body(new ExceptionDTO(e.getMessage(),status.value()));
+    }
+
+}
