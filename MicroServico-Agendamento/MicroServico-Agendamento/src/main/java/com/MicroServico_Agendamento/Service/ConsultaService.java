@@ -8,15 +8,20 @@ import com.MicroServico_Agendamento.Repository.ConsultaRepository;
 import com.MicroServico_Agendamento.Service.Exceptions.BadRequest;
 import com.MicroServico_Agendamento.Service.Exceptions.Conflict;
 import com.MicroServico_Agendamento.Service.Exceptions.NotFound;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import com.MicroServico_Agendamento.Config.KafkaProducerConfig.*;
 
 import java.time.LocalDateTime;
 
 @Service
 public class ConsultaService {
+
+    private final KafkaTemplate<String,ConsultaDTO> kafkaTemplate;
     private final ConsultaRepository repository;
 
-    public ConsultaService(ConsultaRepository repository) {
+    public ConsultaService(KafkaTemplate<String, ConsultaDTO> kafkaTemplate, ConsultaRepository repository) {
+        this.kafkaTemplate = kafkaTemplate;
         this.repository = repository;
     }
     public ConsultaResponse buscarAgendamento(Long id){
@@ -34,7 +39,6 @@ public class ConsultaService {
 
     public ConsultaModel criarAgendamento(ConsultaDTO request){
 
-
         if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
             throw new BadRequest("A data da consulta deve ser no futuro.");
         }
@@ -42,8 +46,10 @@ public class ConsultaService {
             throw new Conflict("O paciente não pode se atender");
         }
         ConsultaModel consultaModel = new ConsultaModel(request);
+        kafkaTemplate.send("consulta-produzida",0,"Consulta do paciente "+request.idPaciente()+LocalDateTime.now(),request);
         return repository.save(consultaModel);
     }
+
     public ConsultaModel editarAgendamento(ConsultaUpdateDTO request){
         ConsultaModel consultaModel = repository.findById(request.id()).
                 orElseThrow(() -> new NotFound("Consulta não encontrada"));
