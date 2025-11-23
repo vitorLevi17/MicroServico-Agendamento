@@ -20,7 +20,6 @@ public class ConsultaService {
         this.repository = repository;
     }
     public ConsultaResponse buscarAgendamento(Long id){
-        //ADICIONAR EXCEPTION PERSONALIZADA
         ConsultaModel agendamento = repository.findById(id).orElseThrow(() -> new NotFound("Consulta não encontrada"));
         ConsultaResponse consulta = new ConsultaResponse(
                 agendamento.getIdMedico(),
@@ -35,8 +34,6 @@ public class ConsultaService {
 
     public ConsultaModel criarAgendamento(ConsultaDTO request){
 
-        //repository.findbyIdPaciente
-        //repository.findbyIdMedico
 
         if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
             throw new BadRequest("A data da consulta deve ser no futuro.");
@@ -51,8 +48,6 @@ public class ConsultaService {
         ConsultaModel consultaModel = repository.findById(request.id()).
                 orElseThrow(() -> new NotFound("Consulta não encontrada"));
 
-        //repository.findbyIdPaciente
-        //repository.findbyIdMedico
         if (!request.diaHoraConsulta().isAfter(LocalDateTime.now())){ //ADICIONAR 1 DIA
             throw new BadRequest("A data da consulta deve ser no futuro.");
         }
